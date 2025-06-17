@@ -1,13 +1,29 @@
 package com.br.literalura.principal;
 
+import com.br.literalura.model.DadosLivro;
+import com.br.literalura.model.Livro;
+import com.br.literalura.repository.LivroRepository;
 import com.br.literalura.service.ConsumoApi;
+import com.br.literalura.service.ConverteDados;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Principal {
     private Scanner leitura = new Scanner(System.in);
     private ConsumoApi consumo = new ConsumoApi();
+    private ConverteDados conversor = new ConverteDados();
     private final String ENDERECO = "https://gutendex.com/books?search";
+
+    @Autowired
+    private LivroRepository repositorio;
+    private List<Livro> livros = new ArrayList<>();
+
+    public Principal(LivroRepository repositorio) {
+        this.repositorio = repositorio;
+    }
 
     public void exibeMenu() {
         var opcao = -1;
@@ -28,7 +44,7 @@ public class Principal {
 
             switch (opcao) {
                 case 1:
-                    buscarLivroPeloTitulo();
+                    buscarLivroWeb();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -39,8 +55,18 @@ public class Principal {
         }
     }
 
-    private void buscarLivroPeloTitulo() {
-        var json = consumo.obterDados(ENDERECO + "dom+casmurro");
-        System.out.println(json);
-    }
+   private DadosLivro getDadosLivro() {
+       System.out.println("Digite o nome do livro para busca: ");
+       var nomeLivro = leitura.nextLine();
+       var json = consumo.obterDados(ENDERECO + nomeLivro.replace(" ", "+"));
+       DadosLivro dados = conversor.obterDados(json, DadosLivro.class);
+       return dados;
+   }
+
+   private void buscarLivroWeb() {
+        DadosLivro dados = getDadosLivro();
+        Livro livro = new Livro(dados);
+        repositorio.save(livro);
+        System.out.println(dados);
+   }
 }
