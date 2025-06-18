@@ -8,21 +8,21 @@ import java.util.List;
 @Table(name = "livros")
 public class Livro {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
-    private String name;
-    private String author;
-    private String summary;
+    private String titulo;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Autor autor;
     private List<String> idiomas;
     private Integer downloads;
 
+    public Livro () {}
     public Livro(DadosLivro dadosLivro) {
-        this.name = dadosLivro.titulo();
-        this.author = dadosLivro.autor();
-        this.summary = dadosLivro.resumo();
-        this.idiomas = dadosLivro.idioma();
+        this.titulo = dadosLivro.titulo();
+        this.idiomas =dadosLivro.idiomas();
         this.downloads = dadosLivro.downloads();
+        this.autor = new Autor(dadosLivro.autores().get(0));
     }
 
     public Long getId() {
@@ -33,30 +33,21 @@ public class Livro {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
-    public String getAuthor() {
-        return author;
+    public Autor getAutor() {
+        return autor;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAutor(Autor autor) {
+        this.autor = autor;
     }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
 
     public List<String> getIdiomas() {
         return idiomas;
@@ -72,17 +63,5 @@ public class Livro {
 
     public void setDownloads(Integer downloads) {
         this.downloads = downloads;
-    }
-
-    @Override
-    public String toString() {
-        return "Livro{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", author='" + author + '\'' +
-                ", summary='" + summary + '\'' +
-                ", idiomas=" + idiomas +
-                ", downloads=" + downloads +
-                '}';
     }
 }
