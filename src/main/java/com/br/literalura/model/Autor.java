@@ -2,6 +2,7 @@ package com.br.literalura.model;
 
 import jakarta.persistence.*;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,12 +71,6 @@ public class Autor {
 
     @Override
     public String toString() {
-        List<String> livros = this.getLivros().stream().map(Livro::getTitulo).toList();
-        return "\n----------------------------" +
-                "\nNome: " + nome +
-                "\n Ano de Nascimento :'" + anoNascimento + '\'' +
-                "\n Ano de Falecimento='" + anoFalecimento + '\'' +
-                "\n Livros {" + livros + "}" +
-                "\n---------------------------";
+        return MessageFormat.format("Autor: {0}\nAno de nascimento: {1}\nAno de falecimento: {2}Livros: [{3}]", getNome(), getAnoNascimento(), getAnoFalecimento(), getLivros());
     }
 }

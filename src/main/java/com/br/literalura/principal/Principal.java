@@ -8,6 +8,7 @@ import com.br.literalura.service.ConsumoApi;
 import com.br.literalura.service.ConverteDados;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,12 +63,16 @@ public class Principal {
         var nomeLivro = leitura.nextLine();
         var json = consumo.obterDados(ENDERECO + nomeLivro.replace(" ", "+"));
         var data = conversor.obterDados(json, ResultadoGutendex.class);
-        Optional<DadosLivro> livroProcurado = data.results()
+        Optional<DadosLivro> livroEncontrado = data.results()
                 .stream()
                 .filter(b -> b.titulo().toLowerCase().contains(nomeLivro.toLowerCase()))
                 .findFirst();
-
-        System.out.println(livroProcurado);
-
+        if (livroEncontrado.isPresent()) {
+            Livro livro = new Livro(livroEncontrado.get());
+            repositorio.save(livro);
+        } else {
+            System.out.println("Livro não encontrado!");
+        }
     }
+
 }
