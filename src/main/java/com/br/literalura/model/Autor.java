@@ -1,5 +1,6 @@
 package com.br.literalura.model;
 
+import com.br.literalura.dto.DadosAutor;
 import jakarta.persistence.*;
 
 import java.text.MessageFormat;
@@ -13,16 +14,17 @@ public class Autor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-    private String anoNascimento;
-    private String anoFalecimento;
-    @OneToMany(mappedBy = "autor", fetch = FetchType.EAGER)
+    private Integer anoNascimento;
+    private Integer anoFalecimento;
+
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Livro> livros = new ArrayList<>();
 
     public Autor() {}
     public Autor(DadosAutor dadosAutor) {
-        this.nome = dadosAutor.nomeAutor();
-        this.anoNascimento = dadosAutor.anoNascimento();
-        this.anoFalecimento = dadosAutor.anoFalecimento();
+        this.nome = String.valueOf(dadosAutor.nome());
+        this.anoNascimento = Integer.valueOf(dadosAutor.anoNascimento());
+        this.anoFalecimento = Integer.valueOf(dadosAutor.anoFalecimento());
     }
 
     public Long getId() {
@@ -41,19 +43,19 @@ public class Autor {
         this.nome = nome;
     }
 
-    public String getAnoNascimento() {
+    public Integer getAnoNascimento() {
         return anoNascimento;
     }
 
-    public void setAnoNascimento(String anoNascimento) {
+    public void setAnoNascimento(Integer anoNascimento) {
         this.anoNascimento = anoNascimento;
     }
 
-    public String getAnoFalecimento() {
+    public Integer getAnoFalecimento() {
         return anoFalecimento;
     }
 
-    public void setAnoFalecimento(String anoFalecimento) {
+    public void setAnoFalecimento(Integer anoFalecimento) {
         this.anoFalecimento = anoFalecimento;
     }
 

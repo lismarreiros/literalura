@@ -1,10 +1,10 @@
 package com.br.literalura.model;
 
+import com.br.literalura.dto.DadosLivro;
 import jakarta.persistence.*;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Table(name = "livros")
@@ -14,18 +14,18 @@ public class Livro {
     private Long id;
     @Column(unique = true)
     private String titulo;
-    private List<String> idiomas;
-    private Integer downloads;
+    private String idiomas;
+    private Double downloads;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private Autor autor;
 
     public Livro () {}
-    public Livro(DadosLivro dadosLivro) {
+    public Livro(DadosLivro dadosLivro, Autor autor) {
         this.titulo = dadosLivro.titulo();
-        this.idiomas = dadosLivro.idiomas();
+        this.idiomas = dadosLivro.idiomas().get(0);
         this.downloads = dadosLivro.downloads();
-        this.autor = new Autor(dadosLivro.autores().get(0));
+        this.autor = autor;
     }
 
     public Long getId() {
@@ -52,19 +52,19 @@ public class Livro {
         this.autor = autor;
     }
 
-    public List<String> getIdiomas() {
+    public String getIdiomas() {
         return idiomas;
     }
 
-    public void setIdiomas(List<String> idiomas) {
+    public void setIdiomas(String idiomas) {
         this.idiomas = idiomas;
     }
 
-    public Integer getDownloads() {
+    public Double getDownloads() {
         return downloads;
     }
 
-    public void setDownloads(Integer downloads) {
+    public void setDownloads(Double downloads) {
         this.downloads = downloads;
     }
 

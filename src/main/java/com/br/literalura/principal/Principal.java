@@ -1,14 +1,16 @@
 package com.br.literalura.principal;
 
-import com.br.literalura.model.DadosLivro;
-import com.br.literalura.model.ResultadoGutendex;
+import com.br.literalura.dto.DadosAutor;
+import com.br.literalura.model.Autor;
+import com.br.literalura.dto.DadosLivro;
+import com.br.literalura.dto.ResultadoGutendex;
 import com.br.literalura.model.Livro;
+import com.br.literalura.repository.AutorRepository;
 import com.br.literalura.repository.LivroRepository;
 import com.br.literalura.service.ConsumoApi;
 import com.br.literalura.service.ConverteDados;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,11 +23,14 @@ public class Principal {
     private final String ENDERECO = "https://gutendex.com/books?search=";
 
     @Autowired
-    private LivroRepository repositorio;
+    private LivroRepository repositorioLivro;
+    @Autowired
+    private AutorRepository repositorioAutor;
     private List<Livro> livros = new ArrayList<>();
 
-    public Principal(LivroRepository repositorio) {
-        this.repositorio = repositorio;
+    public Principal(LivroRepository repositorioLivro, AutorRepository repositorioAutor) {
+        this.repositorioLivro = repositorioLivro;
+        this.repositorioAutor = repositorioAutor;
     }
 
     public void exibeMenu() {
@@ -47,7 +52,10 @@ public class Principal {
 
             switch (opcao) {
                 case 1:
-                    buscarLivroWeb();
+                    buscarLivroPorTitulo();
+                    break;
+                case 2:
+                    listarLivros();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -58,20 +66,52 @@ public class Principal {
         }
     }
 
-    private void buscarLivroWeb() {
+    private void listarLivros() {
+    }
+
+    public void buscarLivroPorTitulo() {
+        DadosLivro dadosLivro = obterDadosLivro();
+
+        // checar se o autor já foi salvo no banco de dados:
+        if (dadosLivro != null) {
+            DadosAutor dadosAutor = dadosLivro.autor().get(0);
+            Livro livro;
+            Autor autorExistente = repositorioAutor.findByNome(dadosAutor.nome());
+            if (autorExistente != null) {
+                livro = new Livro(dadosLivro, autorExistente);
+            } else {
+                Autor novoAutor = new Autor(dadosAutor);
+                livro = new Livro(dadosLivro, novoAutor);
+                repositorioAutor.save(novoAutor);
+            }
+
+            try {
+                repositorioLivro.save(livro);
+                System.out.println(livro);
+            } catch (Exception e) {
+                System.out.println("Livro já consta no banco de dados.");
+            }
+
+        }
+
+    }
+
+    private DadosLivro obterDadosLivro() {
         System.out.println("Digite o nome do livro para busca: ");
         var nomeLivro = leitura.nextLine();
         var json = consumo.obterDados(ENDERECO + nomeLivro.replace(" ", "+"));
         var data = conversor.obterDados(json, ResultadoGutendex.class);
+
         Optional<DadosLivro> livroEncontrado = data.results()
                 .stream()
-                .filter(b -> b.titulo().toLowerCase().contains(nomeLivro.toLowerCase()))
+                .filter(l -> l.titulo().toLowerCase().contains(nomeLivro.toLowerCase()))
                 .findFirst();
+
         if (livroEncontrado.isPresent()) {
-            Livro livro = new Livro(livroEncontrado.get());
-            repositorio.save(livro);
+            return livroEncontrado.get();
         } else {
             System.out.println("Livro não encontrado!");
+            return null;
         }
     }
 
