@@ -37,6 +37,7 @@ public class Principal {
         var opcao = -1;
         while (opcao != 0) {
             var menu = """
+                    \n------------
                     Escolha o número de sua opção:
                     1 - Buscar livro pelo título
                     2 - Listar livros registrados
@@ -67,6 +68,8 @@ public class Principal {
     }
 
     private void listarLivros() {
+        var lista = repositorioLivro.findAll();
+        lista.stream().forEach(System.out::println);
     }
 
     public void buscarLivroPorTitulo() {
@@ -91,7 +94,6 @@ public class Principal {
             } catch (Exception e) {
                 System.out.println("Livro já consta no banco de dados.");
             }
-
         }
 
     }

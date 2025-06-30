@@ -73,6 +73,10 @@ public class Autor {
 
     @Override
     public String toString() {
-        return MessageFormat.format("Autor: {0}\nAno de nascimento: {1}\nAno de falecimento: {2}Livros: [{3}]", getNome(), getAnoNascimento(), getAnoFalecimento(), getLivros());
+        return MessageFormat.format(
+                "\nAutor: {0}" +
+                        "\nAno de nascimento: {1}" +
+                        "\nAno de falecimento: {2} " +
+                        "\nLivros: [{3}]", getNome(), getAnoNascimento(), getAnoFalecimento(), getLivros());
     }
 }

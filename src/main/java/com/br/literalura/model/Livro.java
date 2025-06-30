@@ -70,6 +70,12 @@ public class Livro {
 
     @Override
     public String toString() {
-        return MessageFormat.format("Livro=id={0}, titulo=''{1}'', idiomas={2}, downloads={3}, autor={4}'}'", id, titulo, idiomas, downloads, autor);
+        return MessageFormat.format(
+    "\n----- LIVRO -----" +
+            "\nTítulo: {0}" +
+            "\nAutor: {1}" +
+            "\nIdioma: {2}" +
+            "\nNúmero de downloads: {3}" +
+            "\n-----------------\n" , titulo, autor.getNome(), idiomas, downloads);
     }
 }
