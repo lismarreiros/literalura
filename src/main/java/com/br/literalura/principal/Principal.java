@@ -37,7 +37,7 @@ public class Principal {
         var opcao = -1;
         while (opcao != 0) {
             var menu = """
-                    \n------------
+                    ------------
                     Escolha o número de sua opção:
                     1 - Buscar livro pelo título
                     2 - Listar livros registrados

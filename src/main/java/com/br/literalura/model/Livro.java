@@ -76,6 +76,6 @@ public class Livro {
             "\nAutor: {1}" +
             "\nIdioma: {2}" +
             "\nNúmero de downloads: {3}" +
-            "\n-----------------\n" , titulo, autor.getNome(), idiomas, downloads);
+            "\n-----------------\n" , titulo, autor.getNome(), idiomas, downloads.toString());
     }
 }
