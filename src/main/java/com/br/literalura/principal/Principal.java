@@ -64,12 +64,32 @@ public class Principal {
                 case 4:
                     listarAutoresVivos();
                     break;
+                case 5:
+                    listarLivrosPorIdioma();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
                 default:
                     System.out.println("Opção inválida!");
             }
+        }
+    }
+
+    private void listarLivrosPorIdioma() {
+        System.out.println("""
+                Insira o idioma para realizar a busca:
+                es - espanhol
+                en - inglês
+                fr - francês
+                pt - português
+                """);
+        var idioma = leitura.nextLine();
+        var lista = repositorioLivro.findByIdiomas(idioma);
+        if (lista.isEmpty()) {
+            System.out.println("Não existem livros nesse idioma no banco de dados.");
+        } else {
+            lista.stream().forEach(System.out::println);
         }
     }
 
