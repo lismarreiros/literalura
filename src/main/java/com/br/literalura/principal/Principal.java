@@ -61,6 +61,9 @@ public class Principal {
                 case 3:
                     listarAutores();
                     break;
+                case 4:
+                    listarAutoresVivos();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -68,6 +71,13 @@ public class Principal {
                     System.out.println("Opção inválida!");
             }
         }
+    }
+
+    private void listarAutoresVivos() {
+        System.out.println("Insira o ano que deseja pesquisar");
+        var ano = leitura.nextInt();
+        var lista = repositorioAutor.autoresVivos(ano);
+        lista.stream().forEach(System.out::println);
     }
 
     private void listarAutores() {
