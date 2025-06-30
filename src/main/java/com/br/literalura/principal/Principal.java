@@ -58,6 +58,9 @@ public class Principal {
                 case 2:
                     listarLivros();
                     break;
+                case 3:
+                    listarAutores();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -65,6 +68,11 @@ public class Principal {
                     System.out.println("Opção inválida!");
             }
         }
+    }
+
+    private void listarAutores() {
+        var lista = repositorioAutor.findAll();
+        lista.stream().forEach(System.out::println);
     }
 
     private void listarLivros() {

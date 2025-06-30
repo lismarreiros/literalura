@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "autores")
@@ -59,8 +60,8 @@ public class Autor {
         this.anoFalecimento = anoFalecimento;
     }
 
-    public List<Livro> getLivros() {
-        return livros;
+    public List<String> getLivros() {
+        return livros.stream().map(l->l.getTitulo()).collect(Collectors.toList());
     }
 
     public void setLivros(List<Livro> livros) {
@@ -77,6 +78,6 @@ public class Autor {
                 "\nAutor: {0}" +
                         "\nAno de nascimento: {1}" +
                         "\nAno de falecimento: {2} " +
-                        "\nLivros: [{3}]", getNome(), getAnoNascimento(), getAnoFalecimento(), getLivros());
+                        "\nLivros: {3}", getNome(), getAnoNascimento().toString(), getAnoFalecimento().toString(), getLivros());
     }
 }
